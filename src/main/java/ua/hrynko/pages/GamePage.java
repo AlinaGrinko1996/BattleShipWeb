@@ -5,7 +5,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
+import org.apache.tapestry5.services.ajax.JavaScriptCallback;
+import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import ua.hrynko.BL.*;
 import ua.hrynko.exceptions.WrongCoordinateException;
 import ua.hrynko.wrappers.CellRow;
@@ -26,14 +29,17 @@ public class GamePage {
     @Persist
     private List<Cell> selected;
 
-     @Property
-     Cell[] cellSet;
+    @Property
+    Cell[] cellSet;
 
-     @Property
-     Cell cell;
+    @Property
+    Cell cell;
 
     @Inject
     private AjaxResponseRenderer ajaxResponseRenderer;
+
+    @Inject
+    private Request request;
 
     @Inject
     private Block blockA;
@@ -45,7 +51,7 @@ public class GamePage {
         return game;
     }
 
-    public String getVisualClass(Cell cell) {
+    public String getVisualClass(Cell cell, boolean isMyBoard) {
         if (cell.isHit()) {
             if (cell.isBusy()) {
                 return "ship-broken";
@@ -54,51 +60,74 @@ public class GamePage {
             }
         } else {
             if (cell.isBusy()) {
-                return "busy";
+                return  isMyBoard ? "selected" : "none";
             }
         }
         return "none";
     }
 
-    public String getClassOpponent(Cell cell) {
-        if (cell.isHit()) {
-            return "hit-opponent";
-        }
-        return "none";
-    }
 
 //    public void addSelected(Cell cell) {
 //        selected.add(cell);
 //        cell.setBusy(true);
 //    }
 
-    public List<CellRow> getCellRowsA() throws WrongCoordinateException {
-        List<CellRow> cells = new ArrayList<>();
-        Board boardA = game.getPlayerA().getBoard();
-        for (int i = 0; i < Board.DESK_SIZE; i++) {
-            CellRow cellRow = new CellRow(boardA.getCells(i));
-            cells.add(cellRow);
+    @OnEvent("toggleChosen")
+    public void toggleChosen (int cellId) {
+        Cell cellActive = game.getCurrentPlayer().getBoard().getCellById(cellId);
+        cellActive.toggleBusy();
+        if (request.isXHR()) {
+            ajaxResponseRenderer.addCallback(new JavaScriptCallback() {
+                @Override
+                public void run(JavaScriptSupport javascriptSupport) {
+                    javascriptSupport
+                            .require("app/game-page")
+                            .invoke("toggleClass")
+                            .with(cellId);
+                }
+            });
         }
-        return cells;
     }
 
-    public List<CellRow> getCellRowsB() throws WrongCoordinateException {
-        List<CellRow> cells = new ArrayList<>();
-        Board boardB = game.getPlayerB().getBoard();
-        for (int i = 0; i < Board.DESK_SIZE; i++) {
-            CellRow cellRow = new CellRow(boardB.getCells(i));
-            cells.add(cellRow);
+    @OnEvent("hit")
+    public void hit (int cellId) {
+        Player targetPlayer = game.isPlayerACurrent() ? game.getPlayerB() : game.getPlayerA();
+        Cell cellActive = targetPlayer.getBoard().getCellById(cellId);
+        cellActive.setHit(true);
+        String cellClass = getVisualClass(cellActive, false);
+        if (request.isXHR()) {
+            ajaxResponseRenderer.addCallback(new JavaScriptCallback() {
+                @Override
+                public void run(JavaScriptSupport javascriptSupport) {
+                    javascriptSupport
+                            .require("app/game-page")
+                            .invoke("hit")
+                            .with(cellClass, cellId);
+                }
+            });
         }
-        return cells;
     }
 
     @Log
     void onAjaxA() {
-        ajaxResponseRenderer.addRender("middlezone", blockA);
+        game.setPlayerACurrent(true);
+        ajaxResponseRenderer.addRender("middlezone", blockA)
+                .addCallback(new JavaScriptCallback() {
+                    @Override
+                    public void run(JavaScriptSupport javascriptSupport) {
+                        javascriptSupport.require("app/game-page").invoke("init");
+                    }
+                });
     }
 
     void onAjaxB() {
-        ajaxResponseRenderer.addRender("middlezone", blockB);
+        game.setPlayerACurrent(false);
+        ajaxResponseRenderer.addRender("middlezone", blockB) .addCallback(new JavaScriptCallback() {
+            @Override
+            public void run(JavaScriptSupport javascriptSupport) {
+                javascriptSupport.require("app/game-page").invoke("init");
+            }
+        });
     }
 
     public ZonedDateTime getCurrentTime() {

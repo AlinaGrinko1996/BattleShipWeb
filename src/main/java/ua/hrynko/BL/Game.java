@@ -3,27 +3,31 @@ package ua.hrynko.BL;
 import ua.hrynko.exceptions.WrongCoordinateException;
 
 public class Game {
-    Player playerA;
-    Player playerB;
+    private Player playerA;
+    private Player playerB;
 
-//    public static Player setSinglePlayer(String name) {
-//        if (Objects.isNull(playerA)) {
-//            playerA = new Player(name);
-//            return playerA;
-//        } else {
-//            playerB = new Player(name);
-//        }
-//        return playerB;
-//    }
+    boolean isPlayerACurrent;
 
     public void initialize(String playerAName, String playerBName) {
-        playerA = new Player(playerAName);
-        playerB = new Player(playerBName);
+        playerA = new Player(1, playerAName);
+        playerB = new Player(2, playerBName);
     }
 
-    static void fire(Player target, int x, int y) throws WrongCoordinateException {
-        Cell targetCell = target.getBoard().getCell(x, y);
+    public void fire(Player target, int id) {
+        Cell targetCell = target.getBoard().getCellById(id);
         targetCell.setHit(true);
+    }
+
+    public Player getCurrentPlayer() {
+        return isPlayerACurrent ? playerA : playerB;
+    }
+
+    public boolean isPlayerACurrent() {
+        return isPlayerACurrent;
+    }
+
+    public void setPlayerACurrent(boolean playerACurrent) {
+        isPlayerACurrent = playerACurrent;
     }
 
     public Player getPlayerA() {

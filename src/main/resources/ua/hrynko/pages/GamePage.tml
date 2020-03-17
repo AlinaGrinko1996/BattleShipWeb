@@ -1,33 +1,37 @@
 <html t:type="layout" title="Index | BattleShip"
-      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
 
 <div class="row hero-unit">
     <h1>${message:greeting}</h1>
 </div>
 
 <div class="row">
-
     <t:zone t:id="middlezone" class="span4">
     </t:zone>
-
     <div class="span4">
-        <p><t:eventlink event="ajaxA" zone="middlezone" class="btn btn-default">Open field of ${game.playerA.name}
-        </t:eventlink></p>
+        <p>
+            <t:eventlink event="ajaxA" zone="middlezone" class="btn btn-default">Open field of ${game.playerA.name}
+            </t:eventlink>
+        </p>
     </div>
     <div class="span4">
-        <p><t:eventlink event="ajaxB" zone="middlezone" class="btn btn-default">Open field of ${game.playerB.name}
-        </t:eventlink></p>
+        <p>
+            <t:eventlink event="ajaxB" zone="middlezone" class="btn btn-default">Open field of ${game.playerB.name}
+            </t:eventlink>
+        </p>
     </div>
 </div>
 
 <t:block t:id="blockA">
-
     <div class="my-container">
         <table id="part1" class="t4">
             <tbody>
             <tr t:type="loop" t:source="game.playerA.board.cells" t:value="cellSet">
                 <t:loop source="cellSet" value="cell">
-                    <td class="${getVisualClass(cell)}"></td>
+                    <td class="${getVisualClass(cell, true)}" data-id="${cell.id}">
+                        <t:eventlink class="inner-link" event="toggleChosen" async="true" context="${cell.id}"/>
+                    </td>
                 </t:loop>
             </tr>
             </tbody>
@@ -38,7 +42,16 @@
             <tbody>
             <tr t:type="loop" t:source="game.playerB.board.cells" t:value="cellSet">
                 <t:loop source="cellSet" value="cell">
-                    <td class="opponent ${getClassOpponent(cell)}"></td>
+                    <td class="opponent ${getVisualClass(cell, false)}" data-id="${cell.id}">
+                        <t:eventlink class="inner-link" event="hit" async="true" context="${cell.id}">
+                            <t:if test="cell.hit">
+                                <div>X</div>
+                                <p:else>
+                                    <div class="hidden">X</div>
+                                </p:else>
+                            </t:if>
+                        </t:eventlink>
+                    </td>
                 </t:loop>
             </tr>
             </tbody>
@@ -52,7 +65,9 @@
             <tbody>
             <tr t:type="loop" t:source="game.playerB.board.cells" t:value="cellSet">
                 <t:loop source="cellSet" value="cell">
-                    <td class="${getVisualClass(cell)}"></td>
+                    <td class="${getVisualClass(cell, true)}" data-id="${cell.id}">
+                        <t:eventlink class="inner-link" event="toggleChosen" async="true" context="${cell.id}"/>
+                    </td>
                 </t:loop>
             </tr>
             </tbody>
@@ -63,7 +78,16 @@
             <tbody>
             <tr t:type="loop" t:source="game.playerA.board.cells" t:value="cellSet">
                 <t:loop source="cellSet" value="cell">
-                    <td class="opponent ${getClassOpponent(cell)}"></td>
+                    <td class="opponent ${getVisualClass(cell, false)}" data-id="${cell.id}">
+                        <t:eventlink class="inner-link" event="hit" async="true" context="${cell.id}">
+                            <t:if test="cell.hit">
+                                <div>X</div>
+                                <p:else>
+                                    <div class="hidden">X</div>
+                                </p:else>
+                            </t:if>
+                        </t:eventlink>
+                    </td>
                 </t:loop>
             </tr>
             </tbody>

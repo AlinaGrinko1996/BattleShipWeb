@@ -6617,5 +6617,14 @@ td.opponent {
   height: 25px;
 }
 td.selected {
-  background-color: #2b542c;
+  background-color: #31b0d5;
+}
+td.ship-broken {
+  background-color: red;
+}
+td.hit {
+  display: auto;
+}
+.hidden {
+  display: none;
 }
