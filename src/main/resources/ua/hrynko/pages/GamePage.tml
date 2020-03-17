@@ -1,0 +1,74 @@
+<html t:type="layout" title="Index | BattleShip"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
+
+<div class="row hero-unit">
+    <h1>${message:greeting}</h1>
+</div>
+
+<div class="row">
+
+    <t:zone t:id="middlezone" class="span4">
+    </t:zone>
+
+    <div class="span4">
+        <p><t:eventlink event="ajaxA" zone="middlezone" class="btn btn-default">Open field of ${game.playerA.name}
+        </t:eventlink></p>
+    </div>
+    <div class="span4">
+        <p><t:eventlink event="ajaxB" zone="middlezone" class="btn btn-default">Open field of ${game.playerB.name}
+        </t:eventlink></p>
+    </div>
+</div>
+
+<t:block t:id="blockA">
+
+    <div class="my-container">
+        <table id="part1" class="t4">
+            <tbody>
+            <tr t:type="loop" t:source="game.playerA.board.cells" t:value="cellSet">
+                <t:loop source="cellSet" value="cell">
+                    <td class="${getVisualClass(cell)}"></td>
+                </t:loop>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="opponent-container">
+        <table id="part3" class="t3">
+            <tbody>
+            <tr t:type="loop" t:source="game.playerB.board.cells" t:value="cellSet">
+                <t:loop source="cellSet" value="cell">
+                    <td class="opponent ${getClassOpponent(cell)}"></td>
+                </t:loop>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</t:block>
+
+<t:block t:id="blockB">
+    <div class="my-container">
+        <table id="part2" class="t4">
+            <tbody>
+            <tr t:type="loop" t:source="game.playerB.board.cells" t:value="cellSet">
+                <t:loop source="cellSet" value="cell">
+                    <td class="${getVisualClass(cell)}"></td>
+                </t:loop>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="opponent-container">
+        <table id="part4" class="t3">
+            <tbody>
+            <tr t:type="loop" t:source="game.playerA.board.cells" t:value="cellSet">
+                <t:loop source="cellSet" value="cell">
+                    <td class="opponent ${getClassOpponent(cell)}"></td>
+                </t:loop>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</t:block>
+
+</html>

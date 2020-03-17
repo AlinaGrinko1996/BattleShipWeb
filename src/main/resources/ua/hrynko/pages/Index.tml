@@ -1,0 +1,16 @@
+<html t:type="layout" title="Login | BattleShip"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <t:form t:id="login">
+            <h2>Please sign in</h2>
+            <t:textfield t:id="name1" class="input-block-level" validate="required" placeholder="Name"/>
+            <t:textfield t:id="name2" class="input-block-level" validate="required" placeholder="Name"/>
+            <t:submit class="btn btn-large btn-primary" value="Sign in"/>
+        </t:form>
+    </div>
+</div>
+
+</html>
