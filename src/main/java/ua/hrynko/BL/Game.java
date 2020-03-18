@@ -1,21 +1,18 @@
 package ua.hrynko.BL;
 
-import ua.hrynko.exceptions.WrongCoordinateException;
-
+/**
+ * This object is Persist and stores game in a session
+ * In general could be used for network playing
+ */
 public class Game {
     private Player playerA;
     private Player playerB;
 
-    boolean isPlayerACurrent;
+    private boolean isPlayerACurrent;
 
     public void initialize(String playerAName, String playerBName) {
         playerA = new Player(1, playerAName);
         playerB = new Player(2, playerBName);
-    }
-
-    public void fire(Player target, int id) {
-        Cell targetCell = target.getBoard().getCellById(id);
-        targetCell.setHit(true);
     }
 
     public Player getCurrentPlayer() {
@@ -30,6 +27,9 @@ public class Game {
         isPlayerACurrent = playerACurrent;
     }
 
+    /**
+     * Getters and setters above are needed for binding
+     */
     public Player getPlayerA() {
         return playerA;
     }

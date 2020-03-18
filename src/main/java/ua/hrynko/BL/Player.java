@@ -1,10 +1,12 @@
 package ua.hrynko.BL;
 
-import java.util.Objects;
-
+/**
+ * Used to represent player
+ * Id could be used to make this game networking
+ */
 public class Player {
-    int id;
-    String name;
+    private int id;
+    private String name;
     private Board board;
 
     public Player(int id, String name) {
@@ -27,18 +29,5 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Player player = (Player) o;
-        return id == player.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

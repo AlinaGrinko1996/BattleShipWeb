@@ -2,6 +2,9 @@ package ua.hrynko.BL;
 
 import java.util.Objects;
 
+/**
+ * Used to represent cell on a field
+ */
 public class Cell {
     private int id;
     private boolean isHit;
@@ -37,22 +40,6 @@ public class Cell {
 
     public void setHit(boolean hit) {
         isHit = hit;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     @Override

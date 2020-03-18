@@ -13,6 +13,8 @@ import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
 import org.slf4j.Logger;
+import ua.hrynko.services.pages.GameService;
+import ua.hrynko.services.pages.impl.GameServiceImpl;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -23,14 +25,8 @@ import java.util.UUID;
  */
 public class AppModule
 {
-    public static void bind(ServiceBinder binder)
-    {
-        // binder.bind(MyServiceInterface.class, MyServiceImpl.class);
-
-        // Make bind() calls on the binder object to define most IoC services.
-        // Use service builder methods (example below) when the implementation
-        // is provided inline, or requires more initialization than simply
-        // invoking the constructor.
+    public static void bind(ServiceBinder binder) {
+        binder.bind(GameService.class, GameServiceImpl.class);
     }
 
     public static void contributeFactoryDefaults(MappedConfiguration<String, Object> configuration)

@@ -11,18 +11,19 @@
     </t:zone>
     <div class="span4">
         <p>
-            <t:eventlink event="ajaxA" zone="middlezone" class="btn btn-default">Open field of ${game.playerA.name}
+            <t:eventlink event="ajaxA" zone="middlezone" class="btn btn-default">
+                Open field of ${game.playerA.name}
             </t:eventlink>
         </p>
     </div>
     <div class="span4">
         <p>
-            <t:eventlink event="ajaxB" zone="middlezone" class="btn btn-default">Open field of ${game.playerB.name}
+            <t:eventlink event="ajaxB" zone="middlezone" class="btn btn-default">
+                Open field of ${game.playerB.name}
             </t:eventlink>
         </p>
     </div>
 </div>
-
 <t:block t:id="blockA">
     <div class="my-container">
         <table id="part1" class="t4">
@@ -43,7 +44,7 @@
             <tr t:type="loop" t:source="game.playerB.board.cells" t:value="cellSet">
                 <t:loop source="cellSet" value="cell">
                     <td class="opponent ${getVisualClass(cell, false)}" data-id="${cell.id}">
-                        <t:eventlink class="inner-link" event="hit" async="true" context="${cell.id}">
+                        <t:eventlink class="inner-link" event="fire" async="true" context="${cell.id}">
                             <t:if test="cell.hit">
                                 <div>X</div>
                                 <p:else>
@@ -58,7 +59,6 @@
         </table>
     </div>
 </t:block>
-
 <t:block t:id="blockB">
     <div class="my-container">
         <table id="part2" class="t4">
@@ -79,7 +79,7 @@
             <tr t:type="loop" t:source="game.playerA.board.cells" t:value="cellSet">
                 <t:loop source="cellSet" value="cell">
                     <td class="opponent ${getVisualClass(cell, false)}" data-id="${cell.id}">
-                        <t:eventlink class="inner-link" event="hit" async="true" context="${cell.id}">
+                        <t:eventlink class="inner-link" event="fire" async="true" context="${cell.id}">
                             <t:if test="cell.hit">
                                 <div>X</div>
                                 <p:else>
@@ -94,5 +94,4 @@
         </table>
     </div>
 </t:block>
-
 </html>

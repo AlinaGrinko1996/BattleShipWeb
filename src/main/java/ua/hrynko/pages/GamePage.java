@@ -10,11 +10,8 @@ import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.ajax.JavaScriptCallback;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import ua.hrynko.BL.*;
-import ua.hrynko.exceptions.WrongCoordinateException;
-import ua.hrynko.wrappers.CellRow;
+import ua.hrynko.services.pages.GameService;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,35 +44,31 @@ public class GamePage {
     @Inject
     private Block blockB;
 
+    @Inject
+    private GameService gameService;
+
     public Game getGame() {
         return game;
     }
 
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    /**
+     * Needs to have public access for binding
+     * @param cell
+     * @param isMyBoard
+     * @return
+     */
     public String getVisualClass(Cell cell, boolean isMyBoard) {
-        if (cell.isHit()) {
-            if (cell.isBusy()) {
-                return "ship-broken";
-            } else {
-                return "hit";
-            }
-        } else {
-            if (cell.isBusy()) {
-                return  isMyBoard ? "selected" : "none";
-            }
-        }
-        return "none";
+        return gameService.getClassForCell(cell, isMyBoard);
     }
 
 
-//    public void addSelected(Cell cell) {
-//        selected.add(cell);
-//        cell.setBusy(true);
-//    }
-
     @OnEvent("toggleChosen")
-    public void toggleChosen (int cellId) {
-        Cell cellActive = game.getCurrentPlayer().getBoard().getCellById(cellId);
-        cellActive.toggleBusy();
+    public void toggleChosen(int cellId) {
+        gameService.chooseCellOnMainBoard(cellId, game);
         if (request.isXHR()) {
             ajaxResponseRenderer.addCallback(new JavaScriptCallback() {
                 @Override
@@ -89,12 +82,9 @@ public class GamePage {
         }
     }
 
-    @OnEvent("hit")
-    public void hit (int cellId) {
-        Player targetPlayer = game.isPlayerACurrent() ? game.getPlayerB() : game.getPlayerA();
-        Cell cellActive = targetPlayer.getBoard().getCellById(cellId);
-        cellActive.setHit(true);
-        String cellClass = getVisualClass(cellActive, false);
+    @OnEvent("fire")
+    public void fire(int cellId) {
+        String cellClass = gameService.shootAtOpponent(cellId, game);
         if (request.isXHR()) {
             ajaxResponseRenderer.addCallback(new JavaScriptCallback() {
                 @Override
@@ -122,19 +112,12 @@ public class GamePage {
 
     void onAjaxB() {
         game.setPlayerACurrent(false);
-        ajaxResponseRenderer.addRender("middlezone", blockB) .addCallback(new JavaScriptCallback() {
-            @Override
-            public void run(JavaScriptSupport javascriptSupport) {
-                javascriptSupport.require("app/game-page").invoke("init");
-            }
-        });
-    }
-
-    public ZonedDateTime getCurrentTime() {
-        return ZonedDateTime.now();
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
+        ajaxResponseRenderer.addRender("middlezone", blockB)
+                .addCallback(new JavaScriptCallback() {
+                    @Override
+                    public void run(JavaScriptSupport javascriptSupport) {
+                        javascriptSupport.require("app/game-page").invoke("init");
+                    }
+                });
     }
 }

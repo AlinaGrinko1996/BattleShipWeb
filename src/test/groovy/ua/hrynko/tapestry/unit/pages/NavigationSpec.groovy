@@ -6,13 +6,6 @@ import com.formos.tapestry.xpath.TapestryXPath
 
 import org.apache.tapestry5.alerts.AlertManager
 import org.apache.tapestry5.dom.Document
-import org.apache.tapestry5.dom.Element
-import org.apache.tapestry5.corelib.components.Form
-import org.apache.tapestry5.corelib.components.TextField
-import org.apache.tapestry5.corelib.components.PasswordField
-
-import static spock.mock.MockingApi.Mock
-import static spock.mock.MockingApi.Stub
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -36,6 +29,6 @@ class NavigationSpec extends Specification {
         title.startsWith(pageName)
 
         where:
-        pageName << ["Index", "Login", "About", "Error404"]
+        pageName << ["Index", "GamePage"]
     }
 }
